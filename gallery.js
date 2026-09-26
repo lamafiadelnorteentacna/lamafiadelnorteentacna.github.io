@@ -327,12 +327,15 @@ galleryColumns.addEventListener('click', (event) => {
 });
 galleryLightboxClose.addEventListener('click', closeGalleryLightbox);
 galleryLightbox.addEventListener('click', (event) => {
-  if (event.target !== galleryLightboxImage && event.target !== galleryLightboxClose) closeGalleryLightbox();
+  if (!event.target.closest('.gallery-media-frame') && event.target !== galleryLightboxClose) closeGalleryLightbox();
 });
 galleryLightbox.addEventListener('keydown', (event) => {
   if (event.key === 'Tab') {
     event.preventDefault();
-    galleryLightboxClose.focus();
+    const download = document.querySelector('#gallery-photo-download');
+    const controls = download.disabled ? [galleryLightboxClose] : [galleryLightboxClose, download];
+    const index = controls.indexOf(document.activeElement);
+    controls[(index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length].focus();
   }
 });
 document.addEventListener('keydown', (event) => {

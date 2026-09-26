@@ -25,12 +25,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Staatliches&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260926-gallery-fit-2">
+  <link rel="stylesheet" href="style.css?v=20260926-nav-glow-1">
   <link rel="stylesheet" href="news.css?v=1">
   <script src="script.js?v=20260926-gallery-fit-2" defer></script>
-  <script src="gallery.js?v=20260926-gallery-fit-2" defer></script>
+  <script src="gallery.js?v=20260926-download-1" defer></script>
   <script src="news.js?v=2" defer></script>
   <script src="analytics.js?v=1" defer></script>
+  <script src="media-download.js?v=1" defer></script>
   <script src="gallery-videos.js?v=20260926-gallery-fit-2" defer></script>
   <meta name="gallery-api-endpoint" content="https://mafia-tacna-api.acunanuncamas.workers.dev/api/gallery">
 </head>
@@ -40,7 +41,7 @@
       <source src="img/sangre.webm" type="video/webm">
       <source src="img/sangre.mp4" type="video/mp4">
     </video>
-    <button class="skip-intro" id="skip-intro" type="button">Omitir intro <span aria-hidden="true">↗</span></button>
+    <button class="skip-intro" id="skip-intro" type="button">CONTINUAR <span aria-hidden="true">↗</span></button>
   </div>
 
   <div class="poster" id="poster" tabindex="-1">
@@ -67,7 +68,7 @@
           <div class="counter" id="counter" role="img" aria-label="Contador de muestra: 004320" data-value="004320">
             <span aria-hidden="true">0</span><span aria-hidden="true">0</span><span aria-hidden="true">4</span><span aria-hidden="true">3</span><span aria-hidden="true">2</span><span aria-hidden="true">0</span>
           </div>
-          <p class="counter-caption">TU VOTO CONTIRBUYE CON UNA TACNA SIN MAFIAS</p>
+          <p class="counter-caption">TU VOTO CONTRIBUYE CON UNA TACNA SIN MAFIAS</p>
         </div>
       </section>
 
@@ -100,7 +101,6 @@
     <nav class="bottom-nav" aria-label="Navegación principal">
       <a href="#noticias" id="news-nav-link" aria-controls="news-view"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 5h18v23H7zM11 10h10M11 14h10M17 19h4M17 23h4M11 19h3v4h-3z"/></svg><span>NOTICIAS</span></a>
       <a href="#galeria" id="gallery-nav-link" aria-controls="gallery-view"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 7h24v19H4zM4 23l8-8 6 6 4-4 6 6"/><circle cx="22" cy="12" r="2"/></svg><span class="nav-label">GALERÍA<br>DEL HORROR</span></a>
-      <a href="#"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="16" cy="16" r="12"/><g fill="currentColor" stroke="none"><circle cx="10" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/><circle cx="22" cy="16" r="1.5"/></g></svg><span>MÁS</span></a>
     </nav>
     <footer><span class="footer-mark" aria-hidden="true">×</span><p>SITIO DESARROLLADO POR <span>VERDADEROS TACNEÑOS</span></p><span class="footer-mark" aria-hidden="true">×</span></footer>
       </div>
@@ -109,13 +109,21 @@
   <div class="gallery-lightbox" id="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Fotografía ampliada" hidden>
     <button class="gallery-lightbox-close" id="gallery-lightbox-close" type="button" aria-label="Cerrar fotografía">×</button>
     <figure class="gallery-lightbox-content">
-      <img id="gallery-lightbox-image" alt="">
+      <div class="gallery-media-frame">
+        <img id="gallery-lightbox-image" alt="">
+        <button class="gallery-download" id="gallery-photo-download" type="button" aria-label="Descargar fotografía"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></svg><span>DESCARGAR</span></button>
+      </div>
+      <p class="gallery-download-status" id="gallery-photo-download-status" role="status" aria-live="polite"></p>
       <figcaption id="gallery-lightbox-caption"></figcaption>
     </figure>
   </div>
   <dialog class="gallery-video-dialog" id="gallery-video-dialog" aria-label="Video ampliado">
     <button class="gallery-video-close" id="gallery-video-close" type="button" aria-label="Cerrar video">×</button>
-    <video id="gallery-video-player" controls playsinline preload="metadata"></video>
+    <div class="gallery-media-frame">
+      <video id="gallery-video-player" controls playsinline preload="metadata"></video>
+      <button class="gallery-download" id="gallery-video-download" type="button" aria-label="Descargar video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></svg><span>DESCARGAR</span></button>
+    </div>
+    <p class="gallery-download-status" id="gallery-video-download-status" role="status" aria-live="polite"></p>
     <p id="gallery-video-caption"></p>
     <p id="gallery-video-status" role="status"></p>
   </dialog>

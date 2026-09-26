@@ -391,7 +391,7 @@ body.vhs-glitch-active :is(h1, h2, .primary-button) { text-shadow: 2px 0 #d80b1b
 .counter span:nth-child(3n) { transform: rotate(.7deg) translateY(1px); }
 .counter span:nth-child(4) { transform: rotate(-1deg); }
 .counter-caption { margin: 8px 0 0; font-size: 8px; letter-spacing: .18em; color: #928b84; }
-.bottom-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 460px; margin: 6px auto 0; padding: 2px 0; }
+.bottom-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 340px; margin: 6px auto 0; padding: 2px 0; }
 .bottom-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 52px; color: #b8b2aa; text-decoration: none; font-size: 11px; letter-spacing: .09em; transition: color .2s; }
 .bottom-nav .nav-label { line-height: 1; text-align: center; }
 .bottom-nav svg { width: 28px; height: 28px; }
@@ -717,3 +717,16 @@ body.gallery-page-open { overflow: hidden; }
   .gallery-layout .bottom-nav svg { width: 20px; height: 20px; }
 }
 /* PRUEBA DIFF AIDER */
+
+/* Download controls sit on the enlarged media, clear of the close/player controls. */
+.gallery-media-frame{position:relative;display:inline-block;max-width:100%;vertical-align:top}
+.gallery-download{position:absolute;top:8px;right:8px;z-index:3;display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:9px 12px;border:1px solid #80caff;background:#080b12eb;color:#80caff;font:12px/1.2 var(--typewriter);letter-spacing:.04em;cursor:pointer;box-shadow:2px 2px 0 #d80b1b80}
+.gallery-download svg{width:18px;height:18px;flex:none}.gallery-download:focus-visible{outline:2px solid #80caff;outline-offset:3px}.gallery-download:hover{color:#fff;border-color:var(--red)}.gallery-download:disabled{opacity:.7;cursor:wait}
+.gallery-download-status{margin:8px auto 0;color:#80caff;font:11px/1.4 var(--typewriter)}.gallery-download-status:empty{display:none}
+@media(max-width:599px){.gallery-download{top:6px;right:6px;padding:8px;font-size:10px;gap:5px}}
+
+/* Continuous illumination for the two centered navigation links. */
+.bottom-nav a{--nav-light:#ff3449;animation:nav-illumination 3s ease-in-out infinite}
+.bottom-nav a:nth-child(2){--nav-light:#80caff;animation-delay:-1.5s}
+@keyframes nav-illumination{0%,100%{text-shadow:0 0 3px var(--nav-light);filter:drop-shadow(0 0 1px var(--nav-light))}50%{color:var(--nav-light);text-shadow:0 0 8px var(--nav-light),0 0 16px var(--nav-light);filter:drop-shadow(0 0 5px var(--nav-light))}}
+@media(prefers-reduced-motion:reduce){.bottom-nav a{animation:none;color:var(--nav-light);text-shadow:0 0 3px var(--nav-light);filter:none}}
