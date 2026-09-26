@@ -68,11 +68,15 @@
       const j = Math.floor(Math.random() * (i + 1));
       [entries[i], entries[j]] = [entries[j], entries[i]];
     }
+    let typographyIndex = 0;
     entries.forEach(({ item, layout }, index) => {
       if (!item || typeof item.title !== 'string' || !item.title.trim()) return;
       let url;
       try { url = new URL(item.url, location.href); } catch (_) { return; }
       if (!['http:', 'https:'].includes(url.protocol)) return;
+      if (layout === 'manifesto' || layout === 'quote') {
+        layout = typographyIndex++ % 2 === 0 ? 'quote' : 'manifesto';
+      }
       const article = document.createElement('article');
       article.className = 'news-story news-story--' + layout;
       article.style.setProperty('--news-delay', Math.min(index, 5) * 45 + 'ms');
