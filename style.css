@@ -397,6 +397,7 @@ body.vhs-glitch-active :is(h1, h2, .primary-button) { text-shadow: 2px 0 #d80b1b
 .bottom-nav svg { width: 28px; height: 28px; }
 footer { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 6px auto 0; color: #918a83; font-size: clamp(7px, 1.9vw, 9px); letter-spacing: .035em; }
 footer p { margin: 0; }
+.footer-privacy { flex: 0 0 auto; max-width: 620px; margin: 8px auto 0; padding-inline: 8px; color: #918a83; font-size: 10px; line-height: 1.5; text-align: center; }
 footer span:not(.footer-mark) { color: #bdb5ab; }
 .footer-mark { color: #950d1b; font-size: 19px; line-height: 1; flex-shrink: 0; }
 .intro { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; opacity: 1; transition: opacity var(--intro-fade-duration, 1400ms) ease-in-out; }
