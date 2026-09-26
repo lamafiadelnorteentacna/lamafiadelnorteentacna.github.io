@@ -57,9 +57,9 @@ window.createNewsAdmin = ({ request, setBusy, isBusy, notify, hasSession }) => {
     // Scale the existing public tile; resizing changes size, never the snapshot's content.
     const desktop = window.innerWidth >= 700;
     const fullWidth = Math.min(window.innerWidth, 1320) - (desktop ? 48 : 24);
-    const columns = { lead: 8, photo: 4, wide: 7, feature: 6, manifesto: 5, quote: 6, brief: 4, dispatch: 4, signal: 4 };
+    const columns = { lead: 8, photo: 4, wide: 7, feature: 6, manifesto: 4, quote: 4, brief: 4, dispatch: 4, signal: 4 };
     const span = columns[layout];
-    const naturalWidth = desktop ? (fullWidth - 11 * 16) / 12 * span + (span - 1) * 16 : ['lead', 'manifesto', 'wide', 'feature', 'quote'].includes(layout) ? fullWidth : (fullWidth - 9) / 2;
+    const naturalWidth = desktop ? (fullWidth - 11 * 16) / 12 * span + (span - 1) * 16 : ['lead', 'wide', 'feature'].includes(layout) ? fullWidth : (fullWidth - 9) / 2;
     canvas.style.width = Math.max(100, naturalWidth) + 'px';
     const resize = () => {
       const scale = Math.min(1, target.clientWidth / Math.max(100, naturalWidth));

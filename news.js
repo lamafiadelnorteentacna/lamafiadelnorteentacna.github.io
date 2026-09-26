@@ -59,14 +59,21 @@
 
   function renderNews(items) {
     const articles = [];
-    items.forEach((item, index) => {
+    const entries = items.map((item, index) => {
+      const choices = visualLayouts[item?.visual_type];
+      return { item, layout: choices ? choices[index % choices.length] : layouts[index % layouts.length] };
+    });
+    // Shuffle presentation only; keep the saved order and each item's visual type.
+    for (let i = entries.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [entries[i], entries[j]] = [entries[j], entries[i]];
+    }
+    entries.forEach(({ item, layout }, index) => {
       if (!item || typeof item.title !== 'string' || !item.title.trim()) return;
       let url;
       try { url = new URL(item.url, location.href); } catch (_) { return; }
       if (!['http:', 'https:'].includes(url.protocol)) return;
       const article = document.createElement('article');
-      const choices = visualLayouts[item.visual_type];
-      const layout = choices ? choices[index % choices.length] : layouts[index % layouts.length];
       article.className = 'news-story news-story--' + layout;
       article.style.setProperty('--news-delay', Math.min(index, 5) * 45 + 'ms');
       const link = document.createElement('a');
