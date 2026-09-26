@@ -24,7 +24,11 @@
       let objectUrl;
       try {
         // A Blob enables downloading cross-origin media instead of navigating away.
-        const response = await fetch(src, { signal: controller.signal, credentials: 'omit' });
+        const downloadUrl = new URL(src, location.href);
+        if (['http:', 'https:'].includes(downloadUrl.protocol)) {
+          downloadUrl.searchParams.set('_download', Date.now().toString());
+        }
+        const response = await fetch(downloadUrl.href, { signal: controller.signal, credentials: 'omit', cache: 'no-store' });
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const blob = await response.blob();
         if (!blob.size) throw new Error('Archivo vacío');
@@ -37,7 +41,8 @@
         document.body.append(link); link.click(); link.remove();
         status.textContent = 'Descarga iniciada.';
       } catch (error) {
-        if (open()) status.textContent = error.name === 'AbortError' ? 'La descarga se interrumpió. Puedes reintentar.' : 'No se pudo descargar el archivo. Revisa tu conexión y vuelve a intentar.';
+        console.error('Error al descargar ' + kind + ':', error);
+        if (open()) status.textContent = error.name === 'AbortError' ? 'La descarga se interrumpió. Puedes reintentar.' : 'No se pudo descargar el archivo' + (error.message.startsWith('HTTP ') ? ' (' + error.message + ')' : '') + '. Recarga la página y vuelve a intentar.';
       } finally {
         clearTimeout(timeout); controller = null; button.disabled = false; label.textContent = 'DESCARGAR';
         if (objectUrl) setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
