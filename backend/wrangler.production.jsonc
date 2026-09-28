@@ -3,6 +3,7 @@
   "main": "worker-cloudflare.js",
   "compatibility_date": "2026-09-26",
   "keep_vars": true,
+  "triggers": { "crons": ["0 * * * *"] },
   "d1_databases": [
     {
       "binding": "DB",

@@ -347,7 +347,7 @@ function updateCounter(value) {
     cell.textContent = formatted[index];
   });
   counter.dataset.value = formatted;
-  counter.setAttribute('aria-label', `Participaciones: ${formatted}`);
+  counter.setAttribute('aria-label', `Contador con incrementos automáticos: ${formatted}`);
   return true;
 }
 

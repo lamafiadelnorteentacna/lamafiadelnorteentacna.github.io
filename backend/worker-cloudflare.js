@@ -465,7 +465,40 @@ function galleryImageUrl(request, id) {
    WORKER
 ========================================= */
 
+// Automatic additions are separate from actual votes and never modify counter/votes.
+const START = Date.parse('2026-09-28T11:00:00-05:00');
+const END = Date.parse('2026-10-05T00:00:00-05:00');
+const HOUR = 3600000;
+function randomAddition() {
+  const values = new Uint32Array(1);
+  // Rejection sampling avoids modulo bias for the 26 possible values.
+  do { crypto.getRandomValues(values); } while (values[0] >= 4294967274);
+  return 15 + values[0] % 26;
+}
+async function addScheduledSimulation(env, scheduledTime) {
+  const hour = Math.floor(scheduledTime / HOUR) * HOUR;
+  if (!Number.isFinite(hour) || hour < START || hour >= END) return;
+  await env.DB.prepare('INSERT OR IGNORE INTO counter_simulated_hours (hour_utc, amount) VALUES (?, ?)')
+    .bind(hour, randomAddition()).run();
+}
+async function counterSummary(env, baseValue) {
+  let simulated = 0;
+  try {
+    const row = await env.DB.prepare('SELECT COALESCE(SUM(amount), 0) AS total FROM counter_simulated_hours').first();
+    simulated = Number(row?.total || 0);
+  } catch (error) {
+    // Preserve the existing counter if this Worker is deployed before the migration.
+    if (!String(error.message).includes('no such table: counter_simulated_hours')) throw error;
+  }
+  const votes = await env.DB.prepare('SELECT COUNT(*) AS total FROM votes').first();
+  return { value: Number(baseValue || 0) + simulated, base_value: Number(baseValue || 0),
+    real_votes: Number(votes?.total || 0), automated_value: simulated, includes_automatic_increments: true };
+}
+
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(addScheduledSimulation(env, event.scheduledTime));
+  },
   async fetch(request, env) {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin") || "";
@@ -515,7 +548,7 @@ export default {
 
         return json(
           {
-            value: row?.value ?? 0,
+            ...(await counterSummary(env, row?.value ?? 0)),
           },
           200,
           origin
@@ -626,7 +659,7 @@ export default {
             {
               success: false,
               alreadyVoted: true,
-              value: row?.value ?? 0,
+              ...(await counterSummary(env, row?.value ?? 0)),
             },
             200,
             origin
@@ -653,7 +686,7 @@ export default {
           {
             success: true,
             alreadyVoted: false,
-            value: row?.value ?? 0,
+            ...(await counterSummary(env, row?.value ?? 0)),
           },
           200,
           origin
@@ -779,7 +812,7 @@ export default {
           {
             success: true,
             action,
-            value: row?.value ?? 0,
+            ...(await counterSummary(env, row?.value ?? 0)),
           },
           200,
           origin
