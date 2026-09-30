@@ -4,20 +4,20 @@ export const END = Date.parse('2026-10-05T00:00:00-05:00');
 const HOUR = 3600000;
 export function randomAddition() {
   const values = new Uint32Array(1);
-  // Rejection sampling avoids modulo bias for the 26 possible values.
-  do { crypto.getRandomValues(values); } while (values[0] >= 4294967274);
-  return 15 + values[0] % 26;
+  // Rejection sampling avoids modulo bias for the 41 possible values.
+  do { crypto.getRandomValues(values); } while (values[0] >= 4294967259);
+  return 80 + values[0] % 41;
 }
 export async function addScheduledSimulation(env, scheduledTime) {
   const hour = Math.floor(scheduledTime / HOUR) * HOUR;
   if (!Number.isFinite(hour) || hour < START || hour >= END) return;
-  await env.DB.prepare('INSERT OR IGNORE INTO counter_simulated_hours (hour_utc, amount) VALUES (?, ?)')
+  await env.DB.prepare('INSERT OR IGNORE INTO counter_simulated_hours_v2 (hour_utc, amount) VALUES (?, ?)')
     .bind(hour, randomAddition()).run();
 }
 export async function counterSummary(env, baseValue) {
   let simulated = 0;
   try {
-    const row = await env.DB.prepare('SELECT COALESCE(SUM(amount), 0) AS total FROM counter_simulated_hours').first();
+    const row = await env.DB.prepare('SELECT (SELECT COALESCE(SUM(amount), 0) FROM counter_simulated_hours) + (SELECT COALESCE(SUM(amount), 0) FROM counter_simulated_hours_v2) AS total').first();
     simulated = Number(row?.total || 0);
   } catch (error) {
     // Preserve the existing counter if this Worker is deployed before the migration.
